@@ -1,0 +1,34 @@
+include:
+  - proxy.yaml
+
+services:
+  db:
+    image: mysql:8
+    restart: always
+    networks:
+        backend:
+          ipv4_address: 172.20.0.10
+    ports:
+    - "127.0.0.1:3306:3306"
+    expose:
+      - "3306"
+    env_file: ".env"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 6s
+      retries: 10
+    
+  web:
+    image: cr.yandex/crpcl6r0cqu21rv4bcae/basic-app:test
+    restart: always
+    networks:
+      backend:
+        ipv4_address: 172.20.0.5
+    ports:
+      - "127.0.0.1:5000:5000"
+    expose:
+      - "5000"
+    env_file: ".env_app"
+    depends_on:
+        db:
+            condition: service_healthy
