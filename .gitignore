@@ -188,4 +188,4 @@ pyenv
 Vagrantfile
 
 Dockerfile.python.*
-compose copy.yaml
+compose_copy*
